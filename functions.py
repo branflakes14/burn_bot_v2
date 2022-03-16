@@ -1,9 +1,13 @@
 import random
+from burn_logic import *
+from infect_logic import *
 from classes import *
+
 
 def load_deck():
     with open('decklist.txt', 'r') as file:
         deck_file = [line.rstrip() for line in file]
+    file.close()
     deck_of_names = []
     deck = []
     for x in deck_file:
@@ -39,6 +43,22 @@ def load_deck():
             deck.append(Fetchland())
         elif x == 'Wild Nacatl':
             deck.append(Wild_Nacatl())
+        elif x == 'Spike Jester':
+            deck.append(Spike_Jester())
+        elif x == 'Glistener Elf':
+            deck.append(Glistener_Elf())
+        elif x == 'Blighted Agent':
+            deck.append(Blighted_Agent())
+        elif x == 'Noble Hierarch':
+            deck.append(Noble_Hierarch())
+        elif x == 'Blossoming Defense':
+            deck.append(Blossoming_Defense())
+        elif x == 'Groundswell':
+            deck.append(Groundswell())
+        elif x == 'Might of Old Krosa':
+            deck.append(Might_of_Old_Krosa())
+        elif x == 'Vines of Vastwood':
+            deck.append(Vines_of_Vastwood)
         else:
             quit()
     if len(deck) != 60:
@@ -168,85 +188,8 @@ def swing(zones, stats):
                 else:
                     stats.damage_dealt += x.power
     return zones, stats
-#casting logic
 def cast_spells(zones, stats):
-    # if you have two mana and only one 1cmc card in hand, don't cast a 1cmc card if there's a 2cmc card
-    if stats.mana_pool == 2:
-        cntone = 0
-        cnttwo = 0
-        for x in zones.hand:
-            if hasattr(x, 'cmc'):
-                if x.cmc == 1:
-                    cntone += 1
-        for x in zones.hand:
-            if hasattr(x, 'cmc'):
-                if x.cmc == 2:
-                    cnttwo += 1
-        if cntone == 1 and cnttwo > 1:
-            list = ['Eidolon', 'Boros_Charm', 'Atarkas_Command', 'Lightning_Helix',
-                               'Skullcrack', 'Goblin_Guide', 'Wild_Nacatl', 'Monastery_Swiftspear', 'Rift_Bolt',
-                               'Lava_Spike', 'Lightning_Bolt']
-            while stats.mana_pool > 0:
-                for c in list:
-                    for x in zones.hand:
-                        if x.name == c:
-                            if x.cmc <= stats.mana_pool:
-                                x.resolve(zones, stats, x)
-                if stats.mana_pool == 0:
-                    return zones, stats
-            return zones, stats
-    # cast a FAT command if 2+ creatures
-    if stats.mana_pool >= 2 and sum(x.name == 'Atarkas_Command' for x in zones.hand) > 0 and sum(y.cardtype == 'Creature' for y in zones.battlefield) >= 2:
-        for x in zones.hand:
-            if x.name == 'Atarkas_Command':
-                x.resolve(zones, stats, x)
-                break
-    # manually hard cast rift bolt if it's the only play
-    rifts = sum(x.name == 'Rift_Bolt' for x in zones.hand)
-    lands = sum(x.cardtype == 'Land' for x in zones.hand)
-    if stats.mana_pool >= 3 and len(zones.hand) == (rifts+lands):
-        for x in zones.hand:
-            if x.name == 'Rift_Bolt':
-                zones.graveyard.append(x)
-                zones.hand.remove(x)
-                stats.mana_pool -= 3
-                stats.prowess += 1
-                break
-    # hold off casting nacatl if it's turn 3+
-    if stats.turn >= 3:
-        if stats.mana_pool >= 2:
-            list = ['Eidolon', 'Goblin_Guide', 'Monastery_Swiftspear', 'Rift_Bolt',
-                    'Lava_Spike', 'Lightning_Bolt', 'Boros_Charm', 'Atarkas_Command',
-                    'Lightning_Helix', 'Skullcrack', 'Wild_Nacatl']
-            while stats.mana_pool > 0 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
-                for c in list:
-                    for x in zones.hand:
-                        if x.name == c:
-                            if x.cmc <= stats.mana_pool:
-                                x.resolve(zones, stats, x)
-                if stats.mana_pool == 1 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
-                    break
-            return zones, stats
-    # generic casting turns
-    if stats.mana_pool >= 2:
-        list = ['Eidolon', 'Goblin_Guide', 'Wild_Nacatl', 'Monastery_Swiftspear', 'Rift_Bolt',
-                           'Lava_Spike', 'Lightning_Bolt', 'Boros_Charm',  'Atarkas_Command',
-                           'Lightning_Helix', 'Skullcrack']
-        while stats.mana_pool > 0 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
-            for c in list:
-                for x in zones.hand:
-                    if x.name == c:
-                        if x.cmc <= stats.mana_pool:
-                            x.resolve(zones, stats, x)
-            if stats.mana_pool == 1 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
-                break
-        return zones, stats
-    if stats.mana_pool == 1 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
-        list = ['Wild_Nacatl', 'Goblin_Guide', 'Monastery_Swiftspear', 'Rift_Bolt', 'Lava_Spike', 'Lightning_Bolt']
-        for c in list:
-            for x in zones.hand:
-                if x.name == c:
-                    if x.cmc >= stats.mana_pool:
-                        x.resolve(zones, stats, x)
-                        return zones, stats
-    return zones, stats
+    if stats.archetype == 1:
+        burn_logic(zones, stats)
+    if stats.archetype == 2:
+        infect_logic(zones, stats)

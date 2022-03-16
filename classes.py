@@ -1,4 +1,4 @@
-#region CARDS
+#region BURN
 class Goblin_Guide:
     name = 'Goblin_Guide'
     cardtype = 'Creature'
@@ -163,6 +163,96 @@ class Land:
     cmc = 0
 #endregion
 
+#region INFECT
+class Glistener_Elf:
+    name = 'Glistener_Elf'
+    cardtype = 'Creature'
+    cmc = 1
+    power = 1
+    summoning_sickness = 1
+    def resolve(self, z, s, x):
+        z.cast_this_turn.append(x)
+        z.battlefield.append(x)
+        z.hand.remove(x)
+        s.mana_pool -= x.cmc
+        return z, s, x
+class Blighted_Agent:
+    name = 'Blighted_Agent'
+    cardtype = 'Creature'
+    cmc = 2
+    power = 1
+    summoning_sickness = 1
+    def resolve(self, z, s, x):
+        z.cast_this_turn.append(x)
+        z.battlefield.append(x)
+        z.hand.remove(x)
+        s.mana_pool -= x.cmc
+        return z, s, x
+class Noble_Hierarch:
+    name = 'Noble_Hierarch'
+    cardtype = 'Creature'
+    cmc = 1
+    power = 1
+    summoning_sickness = 1
+    def resolve(self, z, s, x):
+        z.cast_this_turn.append(x)
+        z.battlefield.append(x)
+        z.hand.remove(x)
+        s.mana_pool -= x.cmc
+        return z, s, x
+class Blossoming_Defense:
+    name = 'Blossoming_Defense'
+    cardtype = 'Spell'
+    cmc = 1
+    spelldamage = 2
+    def resolve(self, z, s, x):
+        z.cast_this_turn.append(x)
+        z.battlefield.append(x)
+        z.hand.remove(x)
+        s.damage_dealt += 2
+        s.mana_pool -= x.cmc
+        return z, s, x
+class Groundswell:
+    name = 'Groundswell'
+    cardtype = 'Spell'
+    cmc = 1
+    spelldamage = 2
+    def resolve(self, z, s, x):
+        z.cast_this_turn.append(x)
+        z.battlefield.append(x)
+        z.hand.remove(x)
+        if s.landfall == 1:
+            s.damage_dealt += 4
+        else:
+            s.damage_dealt += 2
+        s.mana_pool -= x.cmc
+        return z, s, x
+class Might_of_Old_Krosa:
+    name = 'Might_of_Old_Krosa'
+    cardtype = 'Spell'
+    cmc = 1
+    spelldamage = 4
+    def resolve(self, z, s, x):
+        z.cast_this_turn.append(x)
+        z.battlefield.append(x)
+        z.hand.remove(x)
+        s.damage_dealt += 2
+        s.mana_pool -= x.cmc
+        return z, s, x
+class Vines_of_Vastwood:
+    name = 'Vines_of_Vastwood'
+    cardtype = 'Spell'
+    cmc = 2
+    spelldamage = 4
+    def resolve(self, z, s, x):
+        z.cast_this_turn.append(x)
+        z.battlefield.append(x)
+        z.hand.remove(x)
+        s.damage_dealt += 4
+        s.mana_pool -= x.cmc
+        return z, s, x
+#endregion
+
 #region ZONES
 class Zones:
     battlefield = []
@@ -172,15 +262,30 @@ class Zones:
     deck = []
     cast_this_turn = []
 
+
 class Stats:
+    with open('config.txt', 'r') as file:
+        config = [line.rstrip() for line in file]
+    archetype = 0
+    for x in config:
+        if x.count('ARCHETYPE'):
+            archetype = int(x.split('=')[1])
+        if x.count('LIFE_TOTAL'):
+            life_total = int(x.split('=')[1])
+        if x.count('ITERATIONS'):
+            iterations = int(x.split('=')[1])
+        if archetype == 2:
+            life_total = 10
+    if archetype == 0:
+        exit()
+    file.close()
     mana_pool = 0
-    life_total = 20
     damage_dealt = 0
     turn = 0
     lands_in_play = 0
     prowess = 0
     total_turns = 0
     current_iteration = 0
-    max_goldfishes = 1
+    landfall = 0
 
 #endregion

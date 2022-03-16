@@ -5,7 +5,7 @@ from classes import *
 zones = Zones
 stats = Stats
 
-while stats.current_iteration < stats.max_goldfishes:
+while stats.current_iteration < stats.iterations:
     # pregame stuff
     reset_game(zones, stats)
     # shuffle and draw a starting hand
@@ -14,6 +14,7 @@ while stats.current_iteration < stats.max_goldfishes:
     # play a game
     while stats.damage_dealt < stats.life_total:
         # upkeep/draw
+        stats.landfall = 0
         stats.mana_pool = 0
         stats.prowess = 0
         stats.total_turns += 1
@@ -24,7 +25,10 @@ while stats.current_iteration < stats.max_goldfishes:
         print('Turn:', stats.turn)
         print('Hand after draw step:', card_names_in_zone(zones.hand))
         # play a land if possible and make mana
+        x = sum(z.cardtype == 'Land' for z in zones.battlefield)
         play_land(zones)
+        if sum(z.cardtype == 'Land' for z in zones.battlefield) > x:
+            stats.landfall = 1
         stats.mana_pool += sum(x.cardtype == 'Land' for x in zones.battlefield)
         print('Mana for turn:', stats.mana_pool)
         # decide what spells to cast based on how much mana we have
@@ -58,6 +62,6 @@ while stats.current_iteration < stats.max_goldfishes:
 
 
 # result
-print('Goldfishes performed:', stats.max_goldfishes)
+print('Goldfishes performed:', stats.iterations)
 print('Total turns taken:', stats.total_turns)
-print('Average turn to kill:', stats.total_turns/stats.max_goldfishes)
+print('Average turn to kill:', stats.total_turns/stats.iterations)

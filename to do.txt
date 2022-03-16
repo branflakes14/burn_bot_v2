@@ -1,4 +1,21 @@
-- calculate which spells to cast based on how much damage I can deal this turn
-if my damage can be lethal
+- finish adding infect cards (don't forget the giant awkward elif that adds cards in functions.py)
+- make a start on infect logic (dread become immense)
 
-- turn swiftspear's damage into power+prowess rather than hamfisting it at the damage step
+- implement play/draw config
+
+- improve burn logic (some 1cmc spells still have priority over 2cmc spells when we have 2 mana,
+maybe in the ==2 mana if statement check to see if there's two 1cmc spells to play) maybe do it
+this way:
+if 3 mana, cast a 1cmc spell, THEN check for 2x 1cmc spells in hand, if so cast them,
+if not cast a 2cmc spell
+
+example of it going wrong (it should've cast the helix to spend mana properly):
+Turn: 3
+Hand after draw step: ['Lightning_Bolt', 'Lightning_Helix', 'Fetchland', 'Fetchland', 'Goblin_Guide']
+Mana for turn: 3
+Battlefield precombat: ['Monastery_Swiftspear', 'Eidolon', 'Goblin_Guide']
+Cast this turn: ['Goblin_Guide', 'Lightning_Bolt']
+Damage dealt by EOT: 15
+
+- change rift bolt logic, needs to be if total hand cmc is castable, cast everything including
+hard cast rift bolt. atm will only hardcast rift bolt if it's the only nonland
