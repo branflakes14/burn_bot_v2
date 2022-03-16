@@ -37,6 +37,8 @@ def load_deck():
             deck.append(Land())
         elif x == 'Fetchland':
             deck.append(Fetchland())
+        elif x == 'Wild Nacatl':
+            deck.append(Wild_Nacatl())
         else:
             quit()
     if len(deck) != 60:
@@ -52,7 +54,12 @@ def drawcard(zones):
 def getopeninghand(zones):
     while len(zones.hand) < 7:
         drawcard(zones)
-    if (landcount(zones) < 2) or (landcount(zones) > 3):
+    cntonecmc = 0
+    for x in zones.hand:
+        if hasattr(x, 'cmc'):
+            if x.cmc == 1:
+                cntonecmc += 1
+    if (landcount(zones) < 2) or (landcount(zones) > 3) or cntonecmc == 0:
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 6:
@@ -103,6 +110,12 @@ def card_types_in_zone(zones):
     for x in zones:
         h.append(x.cardtype)
     return h
+def creatures_on_battlefield(zones):
+    h = []
+    for x in zones.battlefield:
+        if x.cardtype == 'Creature':
+            h.append(x.name)
+    return h
 def print_all_cards_in_game(zones):
     if len(zones.hand) > 0:
         print('Hand:', card_names_in_zone(zones.hand))
@@ -140,7 +153,6 @@ def reset_game(zones, stats):
     zones.deck.clear()
     zones.deck = load_deck()
     stats.mana_pool = 0
-    stats.damage_limit = 20
     stats.damage_dealt = 0
     stats.turn = 0
     stats.lands_in_play = 0
@@ -149,39 +161,89 @@ def reset_game(zones, stats):
     return zones, stats
 def swing(zones, stats):
     for x in zones.battlefield:
-        if hasattr(x, 'power'):
-            if hasattr(x, 'summoning_sickness'):
-                if x.summoning_sickness == 0:
+        if x.cardtype == 'Creature':
+            if x.summoning_sickness == 0:
+                if x.name == 'Monastery_Swiftspear':
+                    stats.damage_dealt += (x.power + stats.prowess)
+                else:
                     stats.damage_dealt += x.power
-                    if x.name == 'Monastery_Swiftspear':
-                        stats.damage_dealt += stats.prowess
     return zones, stats
 #casting logic
 def cast_spells(zones, stats):
+    # if you have two mana and only one 1cmc card in hand, don't cast a 1cmc card if there's a 2cmc card
+    if stats.mana_pool == 2:
+        cntone = 0
+        cnttwo = 0
+        for x in zones.hand:
+            if hasattr(x, 'cmc'):
+                if x.cmc == 1:
+                    cntone += 1
+        for x in zones.hand:
+            if hasattr(x, 'cmc'):
+                if x.cmc == 2:
+                    cnttwo += 1
+        if cntone == 1 and cnttwo > 1:
+            list = ['Eidolon', 'Boros_Charm', 'Atarkas_Command', 'Lightning_Helix',
+                               'Skullcrack', 'Goblin_Guide', 'Wild_Nacatl', 'Monastery_Swiftspear', 'Rift_Bolt',
+                               'Lava_Spike', 'Lightning_Bolt']
+            while stats.mana_pool > 0:
+                for c in list:
+                    for x in zones.hand:
+                        if x.name == c:
+                            if x.cmc <= stats.mana_pool:
+                                x.resolve(zones, stats, x)
+                if stats.mana_pool == 0:
+                    return zones, stats
+            return zones, stats
     # cast a FAT command if 2+ creatures
-    if (stats.mana_pool >= 2) and sum(x.name == 'Atarkas_Command' for x in zones.hand) > 0 and sum(y.cardtype == 'Creature' for y in zones.battlefield) >= 2:
+    if stats.mana_pool >= 2 and sum(x.name == 'Atarkas_Command' for x in zones.hand) > 0 and sum(y.cardtype == 'Creature' for y in zones.battlefield) >= 2:
         for x in zones.hand:
             if x.name == 'Atarkas_Command':
-                x.resolve, zones, stats, x
-    # manually hard cast rift bolt in topdeck mode
-    if (stats.mana_pool >= 3) and (len(zones.hand) == 1) and (zones.hand[0].name == 'Rift_Bolt'):
-        zones.graveyard.append(zones.hand[0])
-        del zones.hand[0]
-        stats.mana_pool -= 3
-        stats.prowess += 1
-        return zones, stats
+                x.resolve(zones, stats, x)
+                break
+    # manually hard cast rift bolt if it's the only play
+    rifts = sum(x.name == 'Rift_Bolt' for x in zones.hand)
+    lands = sum(x.cardtype == 'Land' for x in zones.hand)
+    if stats.mana_pool >= 3 and len(zones.hand) == (rifts+lands):
+        for x in zones.hand:
+            if x.name == 'Rift_Bolt':
+                zones.graveyard.append(x)
+                zones.hand.remove(x)
+                stats.mana_pool -= 3
+                stats.prowess += 1
+                break
+    # hold off casting nacatl if it's turn 3+
+    if stats.turn >= 3:
+        if stats.mana_pool >= 2:
+            list = ['Eidolon', 'Goblin_Guide', 'Monastery_Swiftspear', 'Rift_Bolt',
+                    'Lava_Spike', 'Lightning_Bolt', 'Boros_Charm', 'Atarkas_Command',
+                    'Lightning_Helix', 'Skullcrack', 'Wild_Nacatl']
+            while stats.mana_pool > 0 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
+                for c in list:
+                    for x in zones.hand:
+                        if x.name == c:
+                            if x.cmc <= stats.mana_pool:
+                                x.resolve(zones, stats, x)
+                if stats.mana_pool == 1 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
+                    break
+            return zones, stats
+    # generic casting turns
     if stats.mana_pool >= 2:
-        twomanapriority = ['Eidolon', 'Boros_Charm', 'Goblin_Guide', 'Monastery_Swiftspear', 'Rift_Bolt', 'Lava_Spike', 'Lightning_Bolt', 'Atarkas_Command', 'Lightning_Helix', 'Skullcrack']
-        for c in twomanapriority:
-            for x in zones.hand:
-                if x.name == c:
-                    if x.cmc <= stats.mana_pool:
-                        x.resolve(zones, stats, x)
-                        if stats.mana_pool == 0:
-                            return zones, stats
-    if stats.mana_pool == 1:
-        onemanapriority = ['Goblin_Guide', 'Monastery_Swiftspear', 'Rift_Bolt', 'Lava_Spike', 'Lightning_Bolt']
-        for c in onemanapriority:
+        list = ['Eidolon', 'Goblin_Guide', 'Wild_Nacatl', 'Monastery_Swiftspear', 'Rift_Bolt',
+                           'Lava_Spike', 'Lightning_Bolt', 'Boros_Charm',  'Atarkas_Command',
+                           'Lightning_Helix', 'Skullcrack']
+        while stats.mana_pool > 0 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
+            for c in list:
+                for x in zones.hand:
+                    if x.name == c:
+                        if x.cmc <= stats.mana_pool:
+                            x.resolve(zones, stats, x)
+            if stats.mana_pool == 1 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
+                break
+        return zones, stats
+    if stats.mana_pool == 1 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
+        list = ['Wild_Nacatl', 'Goblin_Guide', 'Monastery_Swiftspear', 'Rift_Bolt', 'Lava_Spike', 'Lightning_Bolt']
+        for c in list:
             for x in zones.hand:
                 if x.name == c:
                     if x.cmc >= stats.mana_pool:

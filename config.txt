@@ -1,0 +1,8 @@
+# The archetype you're using
+ARCHETYPE=burn
+
+# Your opponent's desired life total
+LIFE_TOTAL=20
+
+# How many times you want the program to goldfish your deck
+ITERATIONS=1

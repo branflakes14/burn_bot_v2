@@ -1,3 +1,3 @@
-Average turn to kill with 100000 games played
+Average turn to deal 20 damage with 100000 games played
 
 14/3 - 4.73641

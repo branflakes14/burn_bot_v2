@@ -94,6 +94,7 @@ class Rift_Bolt:
         z.exile.append(x)
         z.hand.remove(x)
         s.mana_pool -= x.cmc
+        s.prowess
         return z, s, x
 class Boros_Charm:
     name = 'Boros_Charm'
@@ -106,6 +107,7 @@ class Boros_Charm:
         z.hand.remove(x)
         s.damage_dealt += x.spelldamage
         s.mana_pool -= x.cmc
+        s.prowess += 1
         return z, s, x
 class Atarkas_Command:
     name = 'Atarkas_Command'
@@ -123,6 +125,7 @@ class Atarkas_Command:
                     cnt += 1
         s.damage_dealt += (x.spelldamage + cnt)
         s.mana_pool -= x.cmc
+        s.prowess += 1
         return z, s, x
 class Skullcrack:
     name = 'Skullcrack'
@@ -135,6 +138,7 @@ class Skullcrack:
         z.hand.remove(x)
         s.damage_dealt += x.spelldamage
         s.mana_pool -= x.cmc
+        s.prowess += 1
         return z, s, x
 class Lightning_Helix:
     name = 'Lightning_Helix'
@@ -147,6 +151,7 @@ class Lightning_Helix:
         z.hand.remove(x)
         s.damage_dealt += x.spelldamage
         s.mana_pool -= x.cmc
+        s.prowess += 1
         return z, s, x
 class Fetchland:
     name = 'Fetchland'
@@ -169,7 +174,7 @@ class Zones:
 
 class Stats:
     mana_pool = 0
-    damage_limit = 20
+    life_total = 20
     damage_dealt = 0
     turn = 0
     lands_in_play = 0

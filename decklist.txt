@@ -1,12 +1,13 @@
 4 Goblin Guide
 4 Monastery Swiftspear
 4 Eidolon of the Great Revel
+3 Wild Nacatl
 4 Lightning Bolt
 4 Lava Spike
 4 Rift Bolt
 4 Boros Charm
 4 Atarkas Command
-4 Skullcrack
+2 Skullcrack
 4 Lightning Helix
-10 Land
+9 Land
 10 Fetchland

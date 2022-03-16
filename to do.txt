@@ -1,2 +1,4 @@
 - calculate which spells to cast based on how much damage I can deal this turn
 if my damage can be lethal
+
+- turn swiftspear's damage into power+prowess rather than hamfisting it at the damage step
