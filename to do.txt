@@ -1,0 +1,2 @@
+- calculate which spells to cast based on how much damage I can deal this turn
+if my damage can be lethal
