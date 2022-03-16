@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from functions import *
 from classes import *
-"""TESTEXT"""
+
 zones = Zones
 stats = Stats
 
