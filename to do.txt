@@ -19,3 +19,9 @@ Damage dealt by EOT: 15
 
 - change rift bolt logic, needs to be if total hand cmc is castable, cast everything including
 hard cast rift bolt. atm will only hardcast rift bolt if it's the only nonland
+
+- BIG CHANGE? instead of deciding what to play from zones.hand, have
+zones.options to allow for mode/activated abilities to be added when cards
+are put in the respective zone? for example, resolving a grim lavamancer would add
+its ability to zones.options. skewer would be awkward to check. maybe
+sum(

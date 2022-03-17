@@ -3,6 +3,6 @@ ARCHETYPE=1
 # Your opponent's desired life total
 LIFE_TOTAL=20
 # How many times you want the program to goldfish your deck
-ITERATIONS=1
+ITERATIONS=100000
 # Play or draw (1 = play, 2 = draw)
-PLAY_DRAW = 1
+PLAY_DRAW=1

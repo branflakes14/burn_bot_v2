@@ -14,4 +14,4 @@ Average turn to deal 20 damage with 100000 games played with this decklist:
 10 Fetchland
 
 14/3 - 4.73641
-16/3 - 4.41778
+16/3 - 4.27592

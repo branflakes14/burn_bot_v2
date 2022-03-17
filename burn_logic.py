@@ -7,7 +7,7 @@ def burn_logic(zones, stats):
                 if x.cmc == 1:
                     cntonespells += 1
     if cntonespells == 2:
-        list = ['Goblin_Guide', 'Monastery_Swiftspear', 'Rift_Bolt', 'Lava_Spike', 'Lightning_Bolt']
+        list = ['Goblin_Guide', 'Monastery_Swiftspear', 'Wild_Nacatl', 'Rift_Bolt', 'Lava_Spike', 'Lightning_Bolt']
         for c in list:
             for x in zones.hand:
                 if x.name == c:
@@ -74,8 +74,8 @@ def burn_logic(zones, stats):
             return zones, stats
     # generic casting turns
     if stats.mana_pool >= 2:
-        list = ['Eidolon', 'Goblin_Guide', 'Wild_Nacatl', 'Monastery_Swiftspear', 'Rift_Bolt',
-                           'Lava_Spike', 'Lightning_Bolt', 'Boros_Charm',  'Atarkas_Command',
+        list = ['Eidolon', 'Goblin_Guide', 'Monastery_Swiftspear', 'Rift_Bolt',
+                           'Lava_Spike', 'Lightning_Bolt', 'Wild_Nacatl', 'Boros_Charm',  'Atarkas_Command',
                            'Lightning_Helix', 'Skullcrack']
         while stats.mana_pool > 0 and sum(x.cardtype != 'Land' for x in zones.hand) > 0:
             for c in list:

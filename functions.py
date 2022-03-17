@@ -1,6 +1,7 @@
 import random
 from burn_logic import *
 from infect_logic import *
+from burn_logic_v2 import *
 from classes import *
 
 
@@ -74,16 +75,23 @@ def drawcard(zones):
 def getopeninghand(zones):
     while len(zones.hand) < 7:
         drawcard(zones)
-    cntonecmc = 0
-    for x in zones.hand:
-        if hasattr(x, 'cmc'):
-            if x.cmc == 1:
-                cntonecmc += 1
-    if (landcount(zones) < 2) or (landcount(zones) > 3) or cntonecmc == 0:
+    if landcount(zones) and sum(x.name == 'Goblin_Guide' for x in zones.hand):
+        return zones
+    if landcount(zones) and sum(x.name == 'Monastery_Swiftspear' for x in zones.hand):
+        return zones
+    if landcount(zones) and sum(x.name == 'Wild_Nacatl' for x in zones.hand):
+        return zones
+    if (landcount(zones) < 2) or (landcount(zones) > 3):
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 6:
         drawcard(zones)
+    if landcount(zones) and sum(x.name == 'Goblin_Guide' for x in zones.hand):
+        return zones
+    if landcount(zones) and sum(x.name == 'Monastery_Swiftspear' for x in zones.hand):
+        return zones
+    if landcount(zones) and sum(x.name == 'Wild_Nacatl' for x in zones.hand):
+        return zones
     if (landcount(zones) < 2) or (landcount(zones) > 3):
         putbackhand(zones)
         shuffle(zones)
@@ -116,9 +124,9 @@ def cast_rift_bolts(zones, stats):
         if x.name == 'Rift_Bolt':
             stats.damage_dealt += 3
             zones.graveyard.append(x)
-            zones.exile.remove(x)
             stats.prowess += 1
             zones.cast_this_turn.append('Rift_Bolt')
+    zones.exile.clear()
     return zones, stats
 def card_names_in_zone(zones):
     h = []
