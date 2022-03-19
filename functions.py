@@ -82,6 +82,7 @@ def getopeninghand(zones):
     if landcount(zones) and sum(x.name == 'Wild_Nacatl' for x in zones.hand):
         return zones
     if (landcount(zones) < 2) or (landcount(zones) > 3):
+        print('7 card mull:', (x.name for x in zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 6:
@@ -93,16 +94,19 @@ def getopeninghand(zones):
     if landcount(zones) and sum(x.name == 'Wild_Nacatl' for x in zones.hand):
         return zones
     if (landcount(zones) < 2) or (landcount(zones) > 3):
+        print('6 card mull:', (x.name for x in zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 5:
         drawcard(zones)
     if (landcount(zones) < 1) or (landcount(zones) > 3):
+        print('5 card mull:', (x.name for x in zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 4:
         drawcard(zones)
     if (landcount(zones) == 0) or (landcount(zones) == 4):
+        print('4 card mull:', (x.name for x in zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 3:

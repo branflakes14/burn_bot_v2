@@ -33,9 +33,17 @@ while stats.current_iteration < stats.iterations:
         print('Mana for turn:', stats.mana_pool)
         # decide what spells to cast based on how much mana we have
         cast_spells(zones, stats)
+        cast = []
+        for x in zones.cast_this_turn:
+            if hasattr(x, 'name'):
+                cast.append(x.name)
+            else:
+                cast.append(x)
+        if len(cast) > 0:
+            print('Cast this turn:', cast)
         # combat
         if len(creatures_on_battlefield(zones)) > 0:
-            print('Battlefield precombat:', creatures_on_battlefield(zones))
+            print('Battlefield:', creatures_on_battlefield(zones))
         swing(zones, stats)
 
         # end of turn
@@ -45,14 +53,7 @@ while stats.current_iteration < stats.iterations:
             if x.name == 'Eidolon':
                 stats.damage_dealt += 2
 
-        cast = []
-        for x in zones.cast_this_turn:
-            if hasattr(x, 'name'):
-                cast.append(x.name)
-            else:
-                cast.append(x)
-        if len(cast) > 0:
-            print('Cast this turn:', cast)
+
         if len(zones.exile) > 0:
             print('Suspended this turn:', card_names_in_zone(zones.exile))
         print('Damage dealt by EOT:', stats.damage_dealt)

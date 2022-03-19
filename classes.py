@@ -94,7 +94,6 @@ class Rift_Bolt:
         z.exile.append(x)
         z.hand.remove(x)
         s.mana_pool -= x.cmc
-        s.prowess += 1
         return z, s, x
 class Boros_Charm:
     name = 'Boros_Charm'
