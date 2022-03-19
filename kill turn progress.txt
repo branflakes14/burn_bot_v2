@@ -15,3 +15,4 @@ Average turn to deal 20 damage with 100000 games played with this decklist:
 
 14/3 - 4.73641
 16/3 - 4.27592
+19/3 - 4.29934 (fixed Rift Bolt suspend adding to prowess)
