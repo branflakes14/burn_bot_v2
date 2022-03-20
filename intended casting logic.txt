@@ -1,0 +1,9 @@
+if we're at odd mana, cast a 1 mana spell
+
+{
+if we're at even mana, see if we have two 1 mana spells to cast
+
+if so, cast them
+
+if not, cast a two mana spell then repeat unless we have 0 mana
+}

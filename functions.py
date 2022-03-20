@@ -1,6 +1,5 @@
 import random
 from burn_logic import *
-from infect_logic import *
 from burn_logic_v2 import *
 from classes import *
 
@@ -46,20 +45,6 @@ def load_deck():
             deck.append(Wild_Nacatl())
         elif x == 'Spike Jester':
             deck.append(Spike_Jester())
-        elif x == 'Glistener Elf':
-            deck.append(Glistener_Elf())
-        elif x == 'Blighted Agent':
-            deck.append(Blighted_Agent())
-        elif x == 'Noble Hierarch':
-            deck.append(Noble_Hierarch())
-        elif x == 'Blossoming Defense':
-            deck.append(Blossoming_Defense())
-        elif x == 'Groundswell':
-            deck.append(Groundswell())
-        elif x == 'Might of Old Krosa':
-            deck.append(Might_of_Old_Krosa())
-        elif x == 'Vines of Vastwood':
-            deck.append(Vines_of_Vastwood)
         else:
             quit()
     if len(deck) != 60:
@@ -203,5 +188,3 @@ def swing(zones, stats):
 def cast_spells(zones, stats):
     if stats.archetype == 1:
         burn_logic(zones, stats)
-    if stats.archetype == 2:
-        infect_logic(zones, stats)

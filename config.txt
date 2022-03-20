@@ -1,8 +1,8 @@
-# The archetype you're using (1 = burn, 2 = infect)
+# The archetype you're using (1 = burn)
 ARCHETYPE=1
 # Your opponent's desired life total
 LIFE_TOTAL=20
 # How many times you want the program to goldfish your deck
-ITERATIONS=100000
+ITERATIONS=1
 # Play or draw (1 = play, 2 = draw)
 PLAY_DRAW=1

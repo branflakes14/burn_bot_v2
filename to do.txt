@@ -1,6 +1,3 @@
-- finish adding infect cards (don't forget the giant awkward elif that adds cards in functions.py)
-- make a start on infect logic (dread become immense)
-
 - implement play/draw config
 
 - improve burn logic (some 1cmc spells still have priority over 2cmc spells when we have 2 mana,
@@ -25,3 +22,5 @@ zones.options to allow for mode/activated abilities to be added when cards
 are put in the respective zone? for example, resolving a grim lavamancer would add
 its ability to zones.options. skewer would be awkward to check. maybe
 sum(
+
+- make v3 logic that ACTUALLY WORKS

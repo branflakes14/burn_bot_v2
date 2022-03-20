@@ -1,7 +1,20 @@
 from functions import *
 
 def burn_logic_v2(zones, stats):
-    # if we're at odd mana, try and cast a single 1cmc spell first
+    # manually hard cast rift bolt if it's the only play
+    rifts = sum(x.name == 'Rift_Bolt' for x in zones.hand)
+    lands = sum(x.cardtype == 'Land' for x in zones.hand)
+    if stats.mana_pool >= 3 and len(zones.hand) == (rifts+lands):
+        for x in zones.hand:
+            if x.name == 'Rift_Bolt':
+                zones.graveyard.append(x)
+                zones.hand.remove(x)
+                stats.damage_dealt += 3
+                stats.mana_pool -= 3
+                stats.prowess += 1
+                break
+
+    # if we're at odd mana, try and get to even mana
     list = ['Goblin_Guide', 'Monastery_Swiftspear', 'Wild_Nacatl', 'Rift_Bolt', 'Lava_Spike', 'Lightning_Bolt']
     if stats.turn >= 3:
         list = ['Lava_Spike', 'Goblin_Guide', 'Monastery_Swiftspear', 'Lightning_Bolt', 'Wild_Nacatl', 'Rift_Bolt']
@@ -47,7 +60,7 @@ def burn_logic_v2(zones, stats):
                 for x in zones.hand:
                     if x.name == c:
                         x.resolve(zones, stats, x)
-                        if stats.mana_pool == 0:
+                        if stats.mana_pool < 1:
                             return zones, stats
         else:
             return zones, stats
