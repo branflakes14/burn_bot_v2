@@ -57,46 +57,50 @@ def drawcard(zones):
     zones.hand.append(zones.deck[0])
     del zones.deck[0]
     return zones
-def getopeninghand(zones):
+def getopeninghand(zones, stats):
     while len(zones.hand) < 7:
         drawcard(zones)
     if landcount(zones) and sum(x.name == 'Goblin_Guide' for x in zones.hand):
-        return zones
+        return zones, stats
     if landcount(zones) and sum(x.name == 'Monastery_Swiftspear' for x in zones.hand):
-        return zones
+        return zones, stats
     if landcount(zones) and sum(x.name == 'Wild_Nacatl' for x in zones.hand):
-        return zones
+        return zones, stats
     if (landcount(zones) < 2) or (landcount(zones) > 3) or sum(x.cardtype == 'Creature' for x in zones.hand) == 0:
-        print('7 card mull:', card_names_in_zone(zones.hand))
+        if stats.goldfishmode == 0:
+            print('7 card mull:', card_names_in_zone(zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 6:
         drawcard(zones)
     if landcount(zones) and sum(x.name == 'Goblin_Guide' for x in zones.hand):
-        return zones
+        return zones, stats
     if landcount(zones) and sum(x.name == 'Monastery_Swiftspear' for x in zones.hand):
-        return zones
+        return zones, stats
     if landcount(zones) and sum(x.name == 'Wild_Nacatl' for x in zones.hand):
-        return zones
+        return zones, stats
     if (landcount(zones) < 2) or (landcount(zones) > 3):
-        print('6 card mull:', card_names_in_zone(zones.hand))
+        if stats.goldfishmode == 0:
+            print('6 card mull:', card_names_in_zone(zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 5:
         drawcard(zones)
     if (landcount(zones) < 1) or (landcount(zones) > 3):
-        print('5 card mull:', card_names_in_zone(zones.hand))
+        if stats.goldfishmode == 0:
+            print('5 card mull:', card_names_in_zone(zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 4:
         drawcard(zones)
     if (landcount(zones) == 0) or (landcount(zones) == 4):
-        print('4 card mull:', card_names_in_zone(zones.hand))
+        if stats.goldfishmode == 0:
+            print('4 card mull:', card_names_in_zone(zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 3:
         drawcard(zones)
-    return zones
+    return zones, stats
 def landcount(zones):
     land = 0
     for x in zones.hand:

@@ -6,3 +6,5 @@ LIFE_TOTAL=20
 ITERATIONS=100000
 # Play or draw (1 = play, 2 = draw)
 PLAY_DRAW=1
+# goldfish mode (don't print plays, 0=print, 1=don't)
+GOLDFISH=1

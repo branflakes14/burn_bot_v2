@@ -1,4 +1,4 @@
-#region BURN
+#region BURN CARDS
 class Goblin_Guide:
     name = 'Goblin_Guide'
     cardtype = 'Creature'
@@ -170,9 +170,11 @@ class Zones:
     exile = []
     deck = []
     cast_this_turn = []
+    options = []
 
 
 class Stats:
+    goldfishmode = 0
     with open('config.txt', 'r') as file:
         config = [line.rstrip() for line in file]
     archetype = 0
@@ -185,6 +187,8 @@ class Stats:
             iterations = int(x.split('=')[1])
         if archetype == 2:
             life_total = 10
+        if x.count("GOLDFISH="):
+            goldfishmode = int(x.split('=')[1])
     if archetype == 0:
         exit()
     file.close()
