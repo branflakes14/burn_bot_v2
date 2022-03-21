@@ -41,6 +41,8 @@ while stats.current_iteration < stats.iterations:
                 cast.append(x)
         if len(cast) > 0:
             print('Cast this turn:', cast)
+        if len(zones.exile) > 0:
+            print('Suspended this turn:', card_names_in_zone(zones.exile))
         # combat
         if len(creatures_on_battlefield(zones)) > 0:
             print('Battlefield:', creatures_on_battlefield(zones))
@@ -54,8 +56,6 @@ while stats.current_iteration < stats.iterations:
                 stats.damage_dealt += 2
 
 
-        if len(zones.exile) > 0:
-            print('Suspended this turn:', card_names_in_zone(zones.exile))
         print('Damage dealt by EOT:', stats.damage_dealt)
         print('-------------------------')
         zones.cast_this_turn.clear()

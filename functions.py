@@ -66,8 +66,8 @@ def getopeninghand(zones):
         return zones
     if landcount(zones) and sum(x.name == 'Wild_Nacatl' for x in zones.hand):
         return zones
-    if (landcount(zones) < 2) or (landcount(zones) > 3):
-        print('7 card mull:', (x.name for x in zones.hand))
+    if (landcount(zones) < 2) or (landcount(zones) > 3) or sum(x.cardtype == 'Creature' for x in zones.hand) == 0:
+        print('7 card mull:', card_names_in_zone(zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 6:
@@ -79,19 +79,19 @@ def getopeninghand(zones):
     if landcount(zones) and sum(x.name == 'Wild_Nacatl' for x in zones.hand):
         return zones
     if (landcount(zones) < 2) or (landcount(zones) > 3):
-        print('6 card mull:', (x.name for x in zones.hand))
+        print('6 card mull:', card_names_in_zone(zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 5:
         drawcard(zones)
     if (landcount(zones) < 1) or (landcount(zones) > 3):
-        print('5 card mull:', (x.name for x in zones.hand))
+        print('5 card mull:', card_names_in_zone(zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 4:
         drawcard(zones)
     if (landcount(zones) == 0) or (landcount(zones) == 4):
-        print('4 card mull:', (x.name for x in zones.hand))
+        print('4 card mull:', card_names_in_zone(zones.hand))
         putbackhand(zones)
         shuffle(zones)
     while len(zones.hand) < 3:
@@ -187,4 +187,4 @@ def swing(zones, stats):
     return zones, stats
 def cast_spells(zones, stats):
     if stats.archetype == 1:
-        burn_logic(zones, stats)
+        burn_logic_v2(zones, stats)
