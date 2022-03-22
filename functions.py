@@ -79,7 +79,7 @@ def getopeninghand(zones, stats):
         return zones, stats
     if landcount(zones) and sum(x.name == 'Wild_Nacatl' for x in zones.hand):
         return zones, stats
-    if (landcount(zones) < 2) or (landcount(zones) > 3):
+    if (landcount(zones) < 2) or (landcount(zones) > 3) or sum(x.cardtype == 'Creature' for x in zones.hand) == 0:
         if stats.goldfishmode == 0:
             print('6 card mull:', card_names_in_zone(zones.hand))
         putbackhand(zones)

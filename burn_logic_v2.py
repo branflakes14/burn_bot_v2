@@ -20,15 +20,15 @@ def burn_logic_v2(zones, stats):
         list = ['Lava_Spike', 'Lightning_Bolt', 'Goblin_Guide', 'Monastery_Swiftspear', 'Wild_Nacatl', 'Rift_Bolt']
     if stats.mana_pool % 2:
         for c in list:
+            tripped = 0
             for x in zones.hand:
                 if x.name == c:
-                    if x.cmc <= stats.mana_pool:
-                        x.resolve(zones, stats, x)
-                        if stats.mana_pool == 0:
-                            return zones, stats
-                        break
-                    else:
-                        return zones, stats
+                    x.resolve(zones, stats, x)
+                    tripped = 1
+                    break
+            if tripped == 1:
+                break
+
     # cast a FAT command if 2+ creatures
     if stats.mana_pool >= 2 and sum(x.name == 'Atarkas_Command' for x in zones.hand) > 0 and sum(y.cardtype == 'Creature' for y in zones.battlefield) >= 2:
         for x in zones.hand:
